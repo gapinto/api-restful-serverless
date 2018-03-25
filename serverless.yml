@@ -1,0 +1,42 @@
+service: kalango-enterprise-api
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  memorySize: 128 # set the maximum memory of the Lambdas in Megabytes
+  timeout: 10 # the timeout is 10 seconds (default is 6 seconds)
+  region: us-east-1
+  profile: serverless-admin # Profile configurado no arquivo de credencias do aws path /home/youruser/.aws
+  stage: dev #prod test dev
+  
+plugins: # Para testar localmente estamos utilizando o serverless-offline e para conseguir utilizar typescript estamos utilizando o serverless-plugin-typescript
+  - serverless-offline
+  - serverless-plugin-typescript
+
+functions:
+  create:
+    handler: enterprises/handlers/create.handler # diretório onde se encontra sua função onde create é o nome do arquivo e handler a função exportada 
+    events:
+      - http:
+          path: enterprises # Toda requisição no path /enterprises do tipo post irá chamar esta função
+          method: post
+  remove:
+    handler: enterprises/handlers/delete.handler
+    events:
+      - http:
+          path: enterprises
+          method: delete
+  update:
+    handler: enterprises/handlers/update.handler
+    events:
+      - http:
+          path: enterprises
+          method: put
+  list:
+    handler: enterprises/handlers/list.handler
+    events:
+      - http:
+          path: enterprises
+          method: get
+
+    
